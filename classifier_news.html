@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Phân loại bản tin</title>
+    <link rel="icon" href="female-soccer-player.png" type="image/x-icon">
+    <style>
+        label, p, span, button {text-shadow:1px 1px 0 #444; font-size:2vw;}
+        input, textarea {outline: none; width: 100%;}
+    </style>
+</head>
+<body class="w3-deep-purple">
+
+        <div class="w3-content w3-mobile w3-margin-top w3-padding-top">
+            <form class="w3-row">
+
+                <label class="w3-cursive w3-hover-text-lime w3-mobile" for="content">Nội dung bài báo</label><br>
+                <textarea id="content" name="content w3-mobile" placeholder="Dán nội dung tại đây..." style="min-height: 50vh"></textarea><br>
+                
+                <label class="w3-cursive w3-hover-text-lime w3-mobile" for="model">Loại mô hình dùng cho phân loại</label><br>
+                <select id="model" class="w3-mobile" name="model" style="outline: none;">
+                    <option value="naive_bayes">Naive Bayes</option>
+                    <option value="svm">SVM</option>
+                    <option value="logistic_regression">Logistic Regression</option>
+                </select>
+            </form>
+
+            <div>
+                <button id="submit" type="button" onclick="submit()" class="w3-button w3-mobile w3-margin-top w3-large w3-pale-blue w3-hover-yellow w3-hover-text-blue">
+                    Phân loại</button>
+
+                <button id="clear" type="button" onclick="clear_content()" 
+                    class="w3-button w3-mobile w3-margin-top w3-large w3-pale-blue w3-hover-yellow w3-hover-text-blue">
+                        Xóa nội dung</button>
+                <span id="result" class="w3-right w3-text-orange w3-hover-text-lime w3-mobile"></span>
+            </div>
+        </div>
+
+
+    <script>
+        function clear_content() {
+            document.getElementById('content').value=''
+            document.getElementById('result').innerText=''
+        }
+
+        function submit() {
+            noi_dung = document.getElementById('content').value
+            type_m = document.getElementById('model').value
+
+            if (noi_dung.length > 0) {
+                data = { content: noi_dung, type_model: type_m}
+                async function get_classifier_news_result(data) {
+                    try {
+                        let myObject = await fetch("http://13.236.68.213:8000/classifier_news", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(data)
+                        });
+
+                        if (myObject.ok) {
+                            let responseText = await myObject.text()
+                            // Kiểm tra xem responseText có dạng JSON không
+                            try {
+                                let myData = JSON.parse(responseText)
+                                // myData bây giờ là một đối tượng JavaScript
+                                document.getElementById("result").innerHTML = "Kết quả trên "+ myData.type_model+ ": " + myData.result
+                                
+                            } catch (error) {
+                                document.getElementById("result").innerHTML = "Lỗi khi phân tích JSON: " + error
+                            }
+                        } else {
+                            document.getElementById("result").innerHTML ="Lỗi khi gửi yêu cầu."
+                        }
+                    } catch (error) {
+                        document.getElementById("result").innerHTML = "Lỗi khi gửi yêu cầu: " + error.message
+                    }
+                }
+                get_classifier_news_result(data)
+            }
+        }
+
+    </script>
+</body>
+</html>
