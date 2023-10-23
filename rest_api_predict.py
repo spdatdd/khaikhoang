@@ -251,11 +251,11 @@ class ClassifierNewsModel(Resource):
         content = text_preprocess(args['content'])
         type_model = args['type_model']
         if type_model=='naive_bayes':
-            model = pickle.load(open(os.path.join("C:\\Users\\ngod2\\NLP\\my_project\\model_news\\naive_bayes.pkl"), 'rb'))
+            model = pickle.load(open(os.path.join("model_news/naive_bayes.pkl"), 'rb'))
         if type_model=='logistic_regression':
-            model = pickle.load(open(os.path.join("C:\\Users\\ngod2\\NLP\\my_project\\model_news\\linear_classifier.pkl"), 'rb'))
+            model = pickle.load(open(os.path.join("model_news/linear_classifier.pkl"), 'rb'))
         if type_model=='svm':
-            model = pickle.load(open(os.path.join("C:\\Users\\ngod2\\NLP\\my_project\\model_news\\linear_classifier.pkl"), 'rb'))
+            model = pickle.load(open(os.path.join("model_news/svm.pkl"), 'rb'))
         y_pred = model.predict([content])
         y_pred = list(labelEncoder.inverse_transform(y_pred))[0]
         # formatting the results as a JSON-serializable structure:
