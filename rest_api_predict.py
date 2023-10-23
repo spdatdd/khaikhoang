@@ -250,17 +250,16 @@ class ClassifierNewsModel(Resource):
         args = parser.parse_args()
         content = text_preprocess(args['content'])
         type_model = args['type_model']
-        # if type_model=='naive_bayes':
-        #     model = pickle.load(open(os.path.join("model_news/naive_bayes.pkl"), 'rb'))
-        # if type_model=='logistic_regression':
-        #     model = pickle.load(open(os.path.join("model_news/linear_classifier.pkl"), 'rb'))
-        # if type_model=='svm':
-        #     model = pickle.load(open(os.path.join("model_news/svm.pkl"), 'rb'))
-        # y_pred = model.predict([content])
-        # y_pred = list(labelEncoder.inverse_transform(y_pred))[0]
-        # # formatting the results as a JSON-serializable structure:
-        # output = {'result': y_pred, 'type_model': type_model}
-        output = {'content': content, 'type_model': type_model}
+        if type_model=='naive_bayes':
+            model = pickle.load(open(os.path.join("model_news/naive_bayes.pkl"), 'rb'))
+        if type_model=='logistic_regression':
+            model = pickle.load(open(os.path.join("model_news/linear_classifier.pkl"), 'rb'))
+        if type_model=='svm':
+            model = pickle.load(open(os.path.join("model_news/svm.pkl"), 'rb'))
+        y_pred = model.predict([content])
+        y_pred = list(labelEncoder.inverse_transform(y_pred))[0]
+        # formatting the results as a JSON-serializable structure:
+        output = {'result': y_pred, 'type_model': type_model}
         return output
 
 
